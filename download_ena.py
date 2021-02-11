@@ -68,13 +68,14 @@ for key in accessions_samples:
     for line in s:
         x = re.search("\"run_accession\":\"(.*)\",\"description\":\"(.*Illumina.*)\"", line.rstrip())
         if x is not None:
-            accessions_runs[acc.rstrip()] = x.group(1)
-            accessions_descriptions[acc.rstrip()] = x.group(2)
+            accessions_runs[key.rstrip()] = x.group(1)
+            accessions_descriptions[key.rstrip()] = x.group(2)
             
 summary = open(os.path.join(downloadpath,"summary.tsv"), "w")
+print(accessions_runs)
 for key in accessions_runs:
     os.system("/home/ubuntu/enaBrowserTools/python3/enaDataGet -f fastq -d "+downloadpath+" "+accessions_runs[key])
     os.rename(downloadpath+"/"+accessions_runs[key], downloadpath+"/"+key)
-    summary.write(key+"\t"+accessions_samples[key]+"\t"+accessions_runs[key]+"\t"+accessions_descriptions[key])
+    summary.write(key+"\t"+accessions_samples[key]+"\t"+accessions_runs[key]+"\t"+accessions_descriptions[key]+"\n")
 
 summary.close()
